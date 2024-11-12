@@ -17,7 +17,7 @@ Parameters:
   PublicSubnetBCIDR:
     Type: String
     Description: CIDR of public subnet B
-    Default: 172.16.10.0/24
+    Default: 172.16.2.0/24
   
   PrivateSubnetACIDR:
     Type: String
