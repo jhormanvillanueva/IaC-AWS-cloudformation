@@ -2,3 +2,5 @@
 
 En este proyecto vamos a lanzar una infraestructura en la nube usando las buenas prácticas del well-architect framework
 
+![arquitectura](img/arquitecturaHA-HS.png)
+
