@@ -3,7 +3,7 @@
 
 En este proyecto vamos a lanzar una infraestructura en la nube usando las buenas prácticas del well-architect framework
 
-![arquitectura](img/arquitecturaHA-HS.png)
+![arquitectura](img/arquitecturaHA-HS.png) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
 <hr>
 
