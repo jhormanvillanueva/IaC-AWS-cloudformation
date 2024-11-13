@@ -71,11 +71,11 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          SourceSecurityGroupId: !GetAtt SGbookPrivate
+          SourceSecurityGroupId: !GetAtt SGbookPrivate.GroupId
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
-          SourceSecurityGroupId: !GetAtt SGbookPrivate
+          SourceSecurityGroupId: !GetAtt SGbookPrivate.GroupId
       Tags:
         - Key: Name
           Value: sg-db
