@@ -1,10 +1,10 @@
 # Infraestructura como código utilizando AWS CloudFormation
-![AWS](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
+![AWS](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
 En este proyecto vamos a lanzar una infraestructura en la nube usando las buenas prácticas del well-architect framework
 
 ![arquitectura](img/arquitecturaHA-HS.png)
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+
 
 <hr>
 
