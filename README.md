@@ -8,4 +8,4 @@ En este proyecto vamos a lanzar una infraestructura en la nube usando las buenas
 
 1. Vamos a crear primero los templates usando la extensión .yml
 
-  - **Network Layer**
+    - **Network Layer**
