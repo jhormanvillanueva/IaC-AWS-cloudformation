@@ -31,3 +31,9 @@ En este proyecto vamos a lanzar una infraestructura en la nube usando las buenas
                   VpcId:
                     Fn::ImportValue:
                       !Sub "network-stack-VPCID"
+
+2. Vamos a lanzar el template usando el AWS CLI
+
+        aws cloudformation create-stack --stack-name network-stack --template-body file://network.yml
+
+## Vamos a verificar la implementación del stack en AWS
