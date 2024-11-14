@@ -50,7 +50,7 @@ Resources:
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: VPC-Bookstore
+          Value: VPC-Bookstore-ElMundoDeLasLetras
 
   #Configure the subnets
   PublicSubnetA:
