@@ -632,11 +632,49 @@ En el segundo template denominado application.yml se configuran los servicios re
               - Fn::ImportValue: !Sub "network-stack-PrivateSubnetAA"
               - Fn::ImportValue: !Sub "network-stack-PrivateSubnetBB"
 
+- Con la configuración de **Outputs** en el servicio AWS Cloudformation en la pestaña de Output se puede ver el DNS generado por el Application Load Balancer. 
 
+        Outputs:
+          bookWSpublic:
+            Description: Public IP of the book-ws
+            Value: !GetAtt bookWSpublic.PublicIp
+            Export:
+              Name: !Sub "netwoRk-stack-book-ws-public"
+          bookWSprivate:
+            Description: Private IP of the book-ws
+            Value: !GetAtt bookWSpublic.PrivateIp
+            Export:
+              Name: !Sub "network-stack-book-ws-private"
+          bookWSALB:
+            Description: ALB of the book-ws
+            Value: !GetAtt ALBbook.DNSName
+            Export:
+              Name: !Sub "network-stack-book-ws-alb"
+          SGdb:
+            Description: SG for DB
+            Value:
+              Ref: SGdb
+            Export:
+              Name: !Sub "network-stack-SGdb"
+          DBbook:
+            Description: Database endpoint
+            Value: !GetAtt DBbook.Endpoint.Address
 
+<hr>
 
-2. Vamos a lanzar el template usando el AWS CLI
+2. Después de escribir los templates, se hace el despliegue utilizando el AWS CLI.
+
+- Primero se hace el despliegue de la infraestructura de red con el siguiente comando. 
 
         aws cloudformation create-stack --stack-name network-stack --template-body file://network.yml
 
-## Vamos a verificar la implementación del stack en AWS
+- Después que el despliegue de la infraestructura de red sea exitoso, se hace el despliegue del stack de application.
+
+      aws cloudformation create-stack --stack-name application-stack --template-body file://application.yml
+
+3. Después que los despliegue de los stack sean exitosos, se hace la verificación de la implementación en AWS. 
+  - Ir al servicio AWS Cloudformation
+  - Seleccionar el Stack application-stack
+  - Ir a la pestaña Output. 
+  - Dar click en el DNS del Application Load Balancer. Se debe abrir en otra pestaña del navegador lo que muestra el servidor web. 
+  - En la pestaña Libros se puede probar la conexión con la base de datos. 
