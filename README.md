@@ -327,7 +327,7 @@ En el primer template denominado network.yml se despliegan los servicios relacio
 
 <hr>
 
-En el segundo template denominado application.yml se configuran los servicios relacionados con el servidor web y la base da datos. 
+En el segundo template denominado application.yml se configuran los servicios relacionados con el servidor web y la base de datos. 
 
 - En esta parte del template se configuran los diferentes grupos de seguridad (Security Group) que se van a asociar a la instancia (Bastion Host) que se configura en la subred pública, al servidor web que corre en las subredes privadas, al balanceador de carga y a la base de datos. Dependiendo del grupo de seguridad se definen unas reglas (firewall) de permiso. 
 
@@ -463,7 +463,14 @@ En el segundo template denominado application.yml se configuran los servicios re
                 sudo systemctl start bookapp
                 sudo systemctl enable bookapp  
         
-- En esta parte se configuran los servicios necesarios para configurar el Application Load Balancer (Balanceador de carga) y el Auto Scaling Group. Estos servicios permiten que la arquitectura a desplegar sea altamente disponible y escalable. 
+- En esta parte se configuran los servicios necesarios para configurar el Application Load Balancer (Balanceador de carga) y el Auto Scaling Group. Estos servicios permiten que la arquitectura a desplegar sea altamente disponible y escalable. Los servicios a configurar son:
+
+  - LaunchTemplate: denonimado en el template LaunchTemplateBook que configura una plantilla que utiliza el servicio Auto Scaling Group para lanzar el servidor web en las subredes privadas de acuerdo a los parámetros definidos en el LaunchTemplateBook.  
+  - ElasticLoadBalancingV2::LoadBalancer: balanceador de carga que se configura de tipo Application Load Balancer y se despliega en las subredes públicas en zonas de disponibilidad diferente. 
+  - TargetGroup: denominado en el template TGelb, configura el destino al cual el Application Load Balancer redirige el tráfico. Para el presente template son las instancias EC2. 
+  - Listener: denominado en el template ListenerALB, define el puerto a través del cual escucha el Application Load Balancer y cómo se configuran las reglas del Target Group. 
+  - AutoScalingGroup: denominado ASGbook, configura el servicio Auto Scaling Group donde se determina la cantidad de instancias para atender el tráfico promedio y cuántas instancia se incrementa en caso que ocurra un pico en el tráfico. 
+  - ScalingPolicy: denominado en el template ScalingPolicyASG, determina el tipo de politica de escalamiento y la métrica a utilizar en el Auto Scaling Group. Para este template se utiliza como métrica el uso del CPU, en caso que el uso promedio de la CPU esté por encima del 25%, se despliegan dos intancias más para tener en total 4 instancias.  
 
         ##Create a launch Template
         LaunchTemplateBook:
@@ -593,32 +600,37 @@ En el segundo template denominado application.yml se configuran los servicios re
                 PredefinedMetricType: ASGAverageCPUUtilization
               TargetValue: 25
 
-   ##Create the databases
-  DBbook:
-    Type: AWS::RDS::DBInstance
-    Properties:
-      AllocatedStorage: 20
-      AvailabilityZone: us-east-1a
-      DBInstanceIdentifier: databasebook
-      DBInstanceClass: db.t3.micro
-      DBName: dbbook
-      DBSubnetGroupName: 
-        Ref: DBbookSubnetGroup
-      Engine: mariadb
-      VPCSecurityGroups:
-        - Ref: SGdb
-      MasterUsername: root
-      MasterUserPassword: '{{resolve:ssm-secure:/book/password:1}}'
+- En esta parte se configuran los servicios relacionados con la configuración del servicio AWS RDS donde se depliega una base de datos relacional MariaDB. 
 
-  ##Create the subnets
-  DBbookSubnetGroup:
-    Type: AWS::RDS::DBSubnetGroup
-    Properties:
-      DBSubnetGroupDescription: Subnets about db
-      DBSubnetGroupName: db-subnet-group-db
-      SubnetIds:
-        - Fn::ImportValue: !Sub "network-stack-PrivateSubnetAA"
-        - Fn::ImportValue: !Sub "network-stack-PrivateSubnetBB"
+  - DBbook: se configura la instancia que despliega la base de datos, el tipo de motor de bases de datos, el usuario y la contraseña. Por seguridad la contraseña de la base de datos se configura en el Servicio Parameter Store de AWS System Manager. 
+  - DBbookSubnetGroup: configura las subredes donde se desplegará la base de datos. Por seguridad para esta arquitectura la base de datos se configurará en dos subredes privadas.
+
+        ##Create the databases
+        DBbook:
+          Type: AWS::RDS::DBInstance
+          Properties:
+            AllocatedStorage: 20
+            AvailabilityZone: us-east-1a
+            DBInstanceIdentifier: databasebook
+            DBInstanceClass: db.t3.micro
+            DBName: dbbook
+            DBSubnetGroupName: 
+              Ref: DBbookSubnetGroup
+            Engine: mariadb
+            VPCSecurityGroups:
+              - Ref: SGdb
+            MasterUsername: root
+            MasterUserPassword: '{{resolve:ssm-secure:/book/password:1}}'
+
+        ##Create the subnets
+        DBbookSubnetGroup:
+          Type: AWS::RDS::DBSubnetGroup
+          Properties:
+            DBSubnetGroupDescription: Subnets about db
+            DBSubnetGroupName: db-subnet-group-db
+            SubnetIds:
+              - Fn::ImportValue: !Sub "network-stack-PrivateSubnetAA"
+              - Fn::ImportValue: !Sub "network-stack-PrivateSubnetBB"
 
 
 
