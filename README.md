@@ -412,7 +412,7 @@ En el segundo template denominado application.yml se configuran los servicios re
 
 - En esta parte del template se configura:
 
-  - Bastion Host: en el template se denomina como **bookWSpublic** y es una instancia EC2 que sirve para acceder a través de SSH a los recursos de la subred privada. Se configuran sus diferentes parámetros como tipo de instancia, red, zona de disponibilidad y el User Data que descarga archivos e instala diferente paquetes mientra la instancia se está iniciando por primera vez. En un bucket de S3 de mi cuenta tengo los archivos python-db-ssm.zip y BookDbDump.sql. El archivo BookDbDump.sql ya está listo para migrar la base de datos al servicio de AWS RDS, migración que se hace desde el User Data cuando el servicio AWS RDS esté disponible. 
+  - Bastion Host: en el template se denomina como **bookWSpublic** y es una instancia EC2 que sirve para acceder a través de SSH a los recursos de la subred privada. Se configuran sus diferentes parámetros como tipo de instancia, red, zona de disponibilidad y el User Data que descarga archivos e instala diferente paquetes mientra la instancia se está iniciando por primera vez. En un bucket de S3 de mi cuenta tengo los archivos python-db-ssm.zip, BookDbDump.sql y el archivo bookapp.service. El archivo BookDbDump.sql ya está listo para migrar la base de datos al servicio de AWS RDS, migración que se hace desde el User Data cuando el servicio AWS RDS esté disponible. El archivo bookapp.service permite correr el servidor web en segundo plano y que inicie cuando la instancia se está lanzando.  
   
 
         #Create the instance
